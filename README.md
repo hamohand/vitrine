@@ -9,6 +9,7 @@ d'Enclume numérique et ses réalisations : **dz-eid**, **FRIDA**, **TCI** et **
 vitrine/
 ├── public/                 # contenu du site (seul dossier servi par Nginx)
 │   ├── index.html          # page unique (hero, activités, réalisations, engagements, méthode, contact)
+│   ├── ar/index.html       # version arabe (droite à gauche), même CSS / JS
 │   ├── css/style.css       # thème « forge » responsive
 │   ├── js/main.js          # menu mobile, animations, étincelles, formulaire
 │   └── assets/logo.svg     # logo + favicon

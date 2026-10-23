@@ -10,6 +10,24 @@
   document.documentElement.classList.remove('no-js');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- Textes dynamiques selon la langue de la page (fr / ar) ---------- */
+  const LANG = document.documentElement.lang === 'ar' ? 'ar' : 'fr';
+  const RTL = document.documentElement.dir === 'rtl';
+  const T = {
+    fr: {
+      menuOpen: 'Ouvrir le menu',
+      menuClose: 'Fermer le menu',
+      formError: 'Merci de compléter les champs obligatoires (nom, courriel valide, message).',
+      formOk: 'Votre messagerie va s\'ouvrir avec le message pré-rempli. Merci !',
+    },
+    ar: {
+      menuOpen: 'فتح القائمة',
+      menuClose: 'إغلاق القائمة',
+      formError: 'يرجى ملء الحقول الإجبارية (الاسم، بريد إلكتروني صحيح، الرسالة).',
+      formOk: 'سيُفتح بريدكم الإلكتروني مع الرسالة جاهزة. شكرًا!',
+    },
+  }[LANG];
+
   /* ---------- Année du pied de page ---------- */
   const annee = document.getElementById('annee');
   if (annee) annee.textContent = new Date().getFullYear();
@@ -25,7 +43,7 @@
   const nav = document.getElementById('nav-principale');
   const setMenu = (open) => {
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+    toggle.setAttribute('aria-label', open ? T.menuClose : T.menuOpen);
     nav.classList.toggle('open', open);
   };
   toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
@@ -78,7 +96,8 @@
     };
 
     const spawn = () => ({
-      x: w * (0.55 + Math.random() * 0.35),
+      // Les étincelles jaillissent sous le terminal : à droite en français, à gauche en arabe.
+      x: w * ((RTL ? 0.10 : 0.55) + Math.random() * 0.35),
       y: h + 10,
       vx: (Math.random() - 0.5) * 1.2,
       vy: -(1.2 + Math.random() * 2.6),
@@ -140,7 +159,8 @@
     a.addEventListener('click', () => {
       const select = form && form.elements.sujet;
       if (!select) return;
-      const opt = [...select.options].find((o) => o.text === a.dataset.sujet);
+      // Comparaison sur la valeur (identique en fr et en ar), le libellé affiché étant traduit.
+      const opt = [...select.options].find((o) => o.value === a.dataset.sujet);
       if (opt) select.value = opt.value;
     });
   });
@@ -155,15 +175,16 @@
         if (!valid) ok = false;
       });
       if (!ok) {
-        status.textContent = 'Merci de compléter les champs obligatoires (nom, courriel valide, message).';
+        status.textContent = T.formError;
         status.className = 'form-status error';
         return;
       }
       const d = Object.fromEntries(new FormData(form));
-      const subject = `[Site] ${d.sujet} — ${d.nom}`;
+      // Le message reçu reste en français (sujet + libellés), avec la langue du visiteur indiquée.
+      const subject = `[Site${LANG === 'ar' ? ' AR' : ''}] ${d.sujet} — ${d.nom}`;
       const body = `Nom : ${d.nom}\nOrganisation : ${d.organisation || '—'}\nCourriel : ${d.email}\n\n${d.message}`;
       window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      status.textContent = 'Votre messagerie va s\'ouvrir avec le message pré-rempli. Merci !';
+      status.textContent = T.formOk;
       status.className = 'form-status success';
     });
     form.addEventListener('input', (e) => e.target.classList.remove('invalid'));

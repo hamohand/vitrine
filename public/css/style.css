@@ -415,3 +415,81 @@ code { font-family: var(--font-mono); font-size: .92em; }
   .contact-form { padding: 1.5rem; }
   .footer-inner { flex-direction: column; text-align: center; }
 }
+
+/* =========================================================
+   Sélecteur de langue
+   ========================================================= */
+.site-nav a.lang-switch {
+  padding: .3rem .75rem;
+  border: 1px solid var(--border); border-radius: 999px;
+  font-size: .88rem;
+}
+.site-nav a.lang-switch:hover { border-color: var(--ember); color: var(--text); }
+.site-nav a.lang-switch::after { display: none; }
+.lang-switch[lang="ar"], .footer-nav a[lang="ar"] { font-family: var(--font-ar); }
+@media (max-width: 900px) {
+  .site-nav a.lang-switch { align-self: flex-start; margin-top: 1rem; border-bottom: 1px solid var(--border); padding: .4rem 1rem; }
+}
+
+/* =========================================================
+   Version arabe (dir="rtl")
+   ========================================================= */
+[dir="rtl"] {
+  --font-body: "IBM Plex Sans Arabic", "Inter", system-ui, "Segoe UI", Tahoma, sans-serif;
+  --font-head: "Noto Kufi Arabic", "Space Grotesk", "Segoe UI", Tahoma, sans-serif;
+}
+[dir="rtl"] body { line-height: 1.85; }
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 { line-height: 1.45; letter-spacing: 0; }
+[dir="rtl"] .hero h1 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); }
+
+/* L'espacement des lettres casse les liaisons de l'écriture arabe */
+[dir="rtl"] .eyebrow,
+[dir="rtl"] .badge,
+[dir="rtl"] .product-side h4,
+[dir="rtl"] .stack-groups h4,
+[dir="rtl"] .contact-list span { letter-spacing: 0; text-transform: none; }
+[dir="rtl"] .eyebrow { font-size: .9rem; }
+
+/* Le code, les adresses et les noms techniques restent de gauche à droite */
+[dir="rtl"] [dir="ltr"] { font-family: var(--font-mono); }
+[dir="rtl"] .brand-motto[dir="ltr"],
+[dir="rtl"] .contact-list a[dir="ltr"],
+[dir="rtl"] .footer-brand span[dir="ltr"],
+[dir="rtl"] .hero-visual[dir="ltr"],
+[dir="rtl"] input[dir="ltr"] { font-family: "Inter", system-ui, sans-serif; }
+[dir="rtl"] .tags[dir="ltr"] { direction: rtl; font-family: inherit; }
+[dir="rtl"] .contact-list a[dir="ltr"] { text-align: right; unicode-bidi: isolate; }
+[dir="rtl"] .hero-facts strong { font-family: var(--font-head); }
+
+/* Miroir des éléments positionnés à gauche / à droite */
+[dir="rtl"] .brand-accent { margin-left: 0; margin-right: .1rem; }
+[dir="rtl"] .site-nav a:not(.btn)::after { left: 100%; right: 0; transition: left .25s; }
+[dir="rtl"] .site-nav a:not(.btn):hover::after,
+[dir="rtl"] .site-nav a.active::after { left: 0; }
+[dir="rtl"] .ticks li { padding-left: 0; padding-right: 1.4rem; }
+[dir="rtl"] .ticks li::before { left: auto; right: 0; top: .75em; }
+[dir="rtl"] .perspective { border-left: 0; border-right: 3px solid var(--ember); border-radius: 8px 0 0 8px; }
+[dir="rtl"] .product::after { right: auto; left: -140px; }
+[dir="rtl"] .product-head small { margin-left: 0; margin-right: .4rem; font-family: var(--font-body); }
+[dir="rtl"] .product-side { padding-left: 0; border-left: 0; padding-right: 2.5rem; border-right: 1px solid var(--border); }
+[dir="rtl"] .value::before { left: auto; right: 0; }
+[dir="rtl"] .steps::before { background: linear-gradient(270deg, var(--ember), var(--ember-2), var(--steel)); }
+[dir="rtl"] .terminal { transform: perspective(1200px) rotateY(6deg) rotateX(2deg); }
+[dir="rtl"] .terminal:hover { transform: none; }
+[dir="rtl"] .hero {
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 110%, rgba(255, 106, 31, .28), transparent 70%),
+    radial-gradient(ellipse 40% 40% at 90% 0%, rgba(185, 194, 202, .07), transparent 70%),
+    var(--bg);
+}
+[dir="rtl"] .contact { background: radial-gradient(ellipse 50% 60% at 100% 100%, rgba(255, 106, 31, .14), transparent 70%), var(--bg); }
+[dir="rtl"] .contact-form select { background-position: left .9rem center; }
+[dir="rtl"] .skip-link:focus { left: auto; right: 1rem; }
+
+@media (max-width: 1080px) {
+  [dir="rtl"] .product-side { padding-right: 0; border-right: 0; }
+}
+@media (max-width: 900px) {
+  [dir="rtl"] .terminal { transform: none; }
+  [dir="rtl"] .site-nav a.lang-switch { align-self: flex-end; }
+}
