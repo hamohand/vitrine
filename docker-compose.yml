@@ -1,0 +1,31 @@
+# ===============================================================
+# Site vitrine Enclume numérique — https://accueil.enclume-numerique.com
+# Se branche sur le Traefik existant (réseau "webproxy", resolver "myresolver").
+# Lancement : docker compose up -d
+# Mise à jour du contenu : "git pull", AUCUN redémarrage nécessaire
+# (le dossier public/ est monté en entier, en lecture seule, dans Nginx).
+# ===============================================================
+
+services:
+  vitrine:
+    image: nginx:1.27-alpine
+    container_name: enclume-vitrine
+    restart: unless-stopped
+    volumes:
+      # Dossier entier (et non fichier par fichier) : les fichiers remplacés par git pull sont bien pris en compte.
+      - ./public:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "webproxy"
+      # La redirection HTTP -> HTTPS est déjà assurée globalement par Traefik (entrypoint "web").
+      traefik.http.routers.vitrine.rule: "Host(`accueil.enclume-numerique.com`)"
+      traefik.http.routers.vitrine.entrypoints: "websecure"
+      traefik.http.routers.vitrine.tls.certresolver: "myresolver"
+      traefik.http.services.vitrine.loadbalancer.server.port: "80"
+    networks:
+      - webproxy
+
+networks:
+  webproxy:
+    external: true
